@@ -1,0 +1,104 @@
+package withoutstrategy;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+class Item{
+    private String itemName;
+    private int itemPrice;
+    private static int price=100;
+    public Item(String itemName,int itemPrice){
+        this.itemName=itemName;
+        this.itemPrice=itemPrice;
+    }
+    public String getItemName(){
+        return itemName;
+    }
+
+    public int getItemPrice() {
+        return itemPrice;
+    }
+
+    public static int getPrice() {
+        return price;
+    }
+}
+class Process {
+    private ArrayList<Item> items = new ArrayList<>();
+    private int availablePrice;
+
+    public Process() {
+        items = new ArrayList<>();
+        availablePrice = Item.getPrice();
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public void viewItem() {
+        if (items.isEmpty()) {
+            System.out.println("no item in the list");
+        } else {
+            System.out.println("Items in the list");
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                System.out.println(item.getItemName() + " - " + item.getItemPrice());
+            }
+        }
+    }
+
+    public void buyItem(int itemIndex) {
+        if (itemIndex >= 0 && itemIndex < items.size()) {
+            Item item = items.get(itemIndex);
+            if (availablePrice >= item.getItemPrice()) {
+                items.remove(itemIndex);
+                availablePrice -= item.getItemPrice();
+                System.out.println(item.getItemName()+" - "+item.getItemPrice()+" purchased");
+            }else {
+                System.out.println("Insuficient balance "+item.getItemName());
+            }
+        }else {
+            System.out.println("Invalid item index");
+        }
+    }
+    public void printReceipt(){
+        System.out.println("Receipt");
+        System.out.println("Shopmall Enterprise");
+        for (Item item: items){
+            System.out.println(item.getItemName());
+        }
+
+        System.out.println("Total item purchased "+(Item.getPrice()-availablePrice));
+        System.out.println("Avalaible balance $"+availablePrice);
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Process process = new Process();
+        process.addItem(new Item("Phone", 34));
+        process.addItem(new Item("Mouse", 12));
+        process.addItem(new Item("Laptop", 14));
+        process.addItem(new Item("PowerBank", 20));
+
+        while (true){
+            System.out.println("\nwelcome to shopmall\n");
+            process.viewItem();
+
+            System.out.println("\n1. buy Item");
+            System.out.println("2. Print receipt");
+            System.out.println("Enter your choice ");
+            int choice= scanner.nextInt();
+            if (choice==1){
+                System.out.println("Enter the item index ");
+                int index= scanner.nextInt();
+                process.buyItem(index);
+            }
+            else if (choice==2){
+                process.printReceipt();
+                break;
+            }
+        }
+    }
+}
